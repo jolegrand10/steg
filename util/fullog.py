@@ -9,7 +9,7 @@ class Full_Log:
 
     def __init__(self, name, verbose=True, debug=True):
         #
-        #inhibit other 3rd party loggers
+        # inhibit other 3rd party loggers
         #
         logger = logging.getLogger(name)
         logger.setLevel(logging.WARNING)
@@ -23,7 +23,7 @@ class Full_Log:
             formatter = logging.Formatter('%(asctime)s *%(levelname)s* %(module)s %(message)s', "%Y-%m-%d %H:%M:%S")
         else:
             formatter = logging.Formatter('%(asctime)s *%(levelname)s* %(message)s', "%Y-%m-%d %H:%M:%S")
-        file_handler = RotatingFileHandler(name+'.log', 'a', 100000, 3)
+        file_handler = RotatingFileHandler(name + '.log', 'a', 100000, 3)
 
         if debug:
             file_handler.setLevel(logging.DEBUG)
@@ -41,5 +41,3 @@ class Full_Log:
             stream_handler.setLevel(logging.DEBUG)
         stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
-
-

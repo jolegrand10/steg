@@ -5,21 +5,30 @@ import logging
 import sys
 from stegano import Stegano
 import traceback
+
 DEBUG = True
+
+
 class Csteg:
     """ a command to run Steganography from the CLI"""
+
     def __init__(self, p):
         """ p is the parser, provided at init time to facilitate unit testing"""
         self.parser = p
         self.setup_parser()
         self.stegano = Stegano()
+        self.verbose = False
+        self.infile = sys.stdin
+        self.outfile = sys.stdout
+        self.picfile = 'NoName.jpg'
+        self.action = 'encode'
+        self.debug = DEBUG
 
     def is_valid_pic(self, arg):
         if not os.path.isfile(arg):
             self.parser.error(f'Picture file {arg} does not exist')
         else:
             return arg
-
 
     def is_valid_action(self, arg):
         if type(arg) is not str:
@@ -34,18 +43,18 @@ class Csteg:
     def setup_parser(self):
         """ add args to parser p"""
         self.parser.add_argument('-a', '--action', help='Specify encode or decode',
-                            type=lambda x: self.is_valid_action(x))
+                                 type=lambda x: self.is_valid_action(x))
         self.parser.add_argument('--pic', dest='picfile', required=True,
-                            help='Path to the picture file', metavar='PIC',
-                            type=lambda x: self.is_valid_pic(x))
+                                 help='Path to the picture file', metavar='PIC',
+                                 type=lambda x: self.is_valid_pic(x))
         self.parser.add_argument('-o', '--output', dest='outfile',
-                            help='Output file. Pic or text, depending on action. Default is stdout.',
-                            default=sys.stdout)
+                                 help='Output file. Pic or text, depending on action. Default is stdout.',
+                                 default=sys.stdout)
         self.parser.add_argument('-i', '--input', dest='infile',
-                            help='Input file. Text. Default is stdin.',
-                            default=sys.stdin)
+                                 help='Input file. Text. Default is stdin.',
+                                 default=sys.stdin)
         self.parser.add_argument('-v', '--verbose', help='Show details',
-                            action='store_true', default=False)
+                                 action='store_true', default=False)
         self.parser.description = """ Two way steganography.
     
             'encode' merges a text in a picture.
@@ -57,7 +66,7 @@ class Csteg:
         self.verbose = pa.verbose
         self.infile = pa.infile
         self.outfile = pa.outfile
-        self.picfile= pa.picfile
+        self.picfile = pa.picfile
         self.action = pa.action
         self.debug = DEBUG
         if DEBUG:
@@ -78,8 +87,6 @@ class Csteg:
                 self.encode()
             else:
                 self.decode()
-
-
 
     def encode(self):
         try:
@@ -103,7 +110,7 @@ class Csteg:
                 #
                 output_filetype = '.png'
                 if self.outfile != sys.stdout:
-                    self.outfile=self.outfile[:-4]+".png"
+                    self.outfile = self.outfile[:-4] + ".png"
             logging.debug("Encoded image ready")
             if self.outfile == sys.stdout:
                 logging.debug("Writing image to stdout")
@@ -113,8 +120,6 @@ class Csteg:
                 self.stegano.write_image(self.outfile)
         except Exception as e:
             logging.error(f"Unexpected error while encoding: {e}", exc_info=self.debug)
-
-
 
     def decode(self):
         try:
@@ -143,7 +148,6 @@ def main():
     c.parse()
     Full_Log("csteg", debug=DEBUG, verbose=c.verbose)
     c.run()
-
 
 
 if __name__ == '__main__':

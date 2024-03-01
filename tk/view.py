@@ -9,6 +9,7 @@ import time
 import threading
 from stegano import Stegano
 
+
 class Worker:
     def __init__(self, model, win, msg):
         self.model = model
@@ -24,6 +25,7 @@ class Worker:
         self.pb.place(x=self.win.winfo_width() // 2, y=self.win.winfo_height() // 2, anchor="center")
         self.pb.start()
         self.finished = False
+        self.th = None
 
     def run(self):
         raise NotImplementedError
@@ -58,7 +60,7 @@ class EncodingWorker(Worker):
 
     def run(self):
         n = self.model.encode()
-        if n< len(self.model.data):
+        if n < len(self.model.data):
             message = "Text too long for this image. Truncated."
             logging.warning(message)
             tk.messagebox.showinfo("Warning", message)
@@ -77,6 +79,7 @@ class ReadImageWorker(Worker):
             ratioh = h / View.HEIGHT
             ratio = max(ratiow, ratioh)
             return int(w / ratio), int(h / ratio)
+
         #
         # update the model (model needs a cv2 image)
         #
@@ -103,6 +106,7 @@ class ReadImageWorker(Worker):
             tk.messagebox.showinfo(title, message)
 
         self.finish()
+
 
 class View:
     WIDTH = 800
@@ -156,9 +160,6 @@ class View:
         self.root.bind_all("<Control-t>", self.cmd_toggle_tab)
         self.root.bind_all("<Control-d>", self.cmd_decode)
         self.root.bind_all("<Control-e>", self.cmd_encode)
-
-
-
 
     def make_widgets(self):
         def tab_changed(*args):
@@ -290,7 +291,6 @@ class View:
             self.cmd_closetxt()
         self.refresh_steg_menu()
 
-
     def cmd_closepic(self):
         self.canvas.delete("all")
 
@@ -335,13 +335,13 @@ class View:
 
     def refresh_steg_menu(self):
         self.steg_menu.entryconfig("Encode", state="active" if
-                                    self.model is not None and
-                                   self.model.image is not None
-                                    else "disabled")
+        self.model is not None and
+        self.model.image is not None
+        else "disabled")
         self.steg_menu.entryconfig("Decode", state="active" if
-                                    self.model is not None and
-                                   self.model.image is not None
-                                   else "disabled")
+        self.model is not None and
+        self.model.image is not None
+        else "disabled")
         logging.debug("Refreshing steg menu now !")
 
     def run(self):

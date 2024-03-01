@@ -3,6 +3,7 @@ import numpy as np
 import logging
 import sys
 
+
 class Stegano:
     """ encode/decode a byte-msg in/from an image without visible difference"""
 
@@ -21,8 +22,9 @@ class Stegano:
         """ Byte string to image """
         logging.info(f"Read image from bytestring")
         nparr = np.frombuffer(bs, np.uint8)
-        self.image= cv.imdecode(nparr, cv.IMREAD_COLOR)
+        self.image = cv.imdecode(nparr, cv.IMREAD_COLOR)
         self.n, self.p, _ = self.image.shape
+
     def image2bs(self, dot_ext):
         """ image to byte string """
         image_encoded = cv.imencode(dot_ext, self.image)[1]
@@ -49,8 +51,8 @@ class Stegano:
 
     def input_data(self):
         """ collect text data as bytes from stdin """
-        self.data=sys.stdin.read()
-        self.data = bytearray(self.data,'utf-8')
+        self.data = sys.stdin.read()
+        self.data = bytearray(self.data, 'utf-8')
         logging.info(f"{len(self.data)} bytes read from stdin")
 
     def write_image(self, path):
@@ -178,31 +180,34 @@ class Stegano:
 
                             bs = ""
 
+
 def test_bs():
     # Load image as string from file/database
     with open('tests/bonjour.jpg', 'rb') as fd:
         img_str = fd.read()
-    s=Stegano()
+    s = Stegano()
     s.bs2image(img_str)
-    s.data=bytearray("Salut",'utf-8')
+    s.data = bytearray("Salut", 'utf-8')
     s.encode()
     s.write_image("salut.png")
+
 
 def main():
     """ a short test"""
     s = Stegano()
     s.read_image(input("Enter path to image file: "))
-    while (op:=input("D to decode, E to encode, Q to quit: ")) not in "DEQ":
+    while (op := input("D to decode, E to encode, Q to quit: ")) not in "DEQ":
         continue
-    if op=="Q":
+    if op == "Q":
         return
-    if op=='D':
+    if op == 'D':
         s.decode()
         print(s.data)
-    if op=="E":
+    if op == "E":
         s.read_data(input("Enter path to text file: "))
         s.encode()
         s.write_image(input("Enter path to output image file: "))
+
 
 if __name__ == '__main__':
     main()

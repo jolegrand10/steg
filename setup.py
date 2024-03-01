@@ -8,26 +8,25 @@ import sys
 build_options = {'packages': [],
                  'excludes': []}
 
-
-if sys.platform=='win32':
+if sys.platform == 'win32':
 
     executables = [
         Executable('tk/main.py',
                    base='Win32GUI',
-                   target_name = 'tksteg',
+                   target_name='tksteg',
                    icon="tk/tksteg.ico",
                    # shortcutDir="DesktopFolder",
                    # shortcutName="TkSteg",
                    ),
-        Executable('cli/csteg.py', base=None,target_name = 'csteg')
+        Executable('cli/csteg.py', base=None, target_name='csteg')
     ]
 
     setup(name='steg',
-          version = '1.0',
-          description = 'Simple steganography',
-          options = {'build_exe': build_options},
-          executables = executables)
-elif sys.platform=='linux':
+          version='1.0',
+          description='Simple steganography',
+          options={'build_exe': build_options},
+          executables=executables)
+elif sys.platform == 'linux':
     print("""To build a single file exe @ linux, use rather:
    $ pyinstaller tksteg.spec
 or single line command:

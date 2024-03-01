@@ -11,5 +11,6 @@ class Controller:
     def run(self):
         self.view.run()
 
+
 if __name__ == '__main__':
     Controller().run()

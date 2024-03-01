@@ -2,11 +2,10 @@ from js import document, console, window, FileReader, File, Uint8Array, Element
 from pyodide.ffi import create_proxy
 from stegano import Stegano
 
-
-
 # These are globals
-pic=bytearray()
-txt=""
+pic = bytearray()
+txt = ""
+
 
 async def get_bytes_from_file(file):
     array_buf = await file.arrayBuffer()
@@ -27,17 +26,14 @@ async def _upload_text_file(event):
     message("")
 
 
-
 upload_text_file = create_proxy(_upload_text_file)
 document.getElementById("text-upload").addEventListener("change", upload_text_file)
-
 
 
 async def _upload_pic_file(event):
     global pic
     file_list = event.target.files
     first_item = file_list.item(0)
-
 
     # TODO create img if not exists ONLY
     new_image = document.createElement('img')
@@ -52,6 +48,7 @@ async def _upload_pic_file(event):
 
 upload_pic_file = create_proxy(_upload_pic_file)
 document.getElementById("pic-upload").addEventListener("change", upload_pic_file)
+
 
 def _reveal(event):
     try:
@@ -88,11 +85,14 @@ def _reveal(event):
 reveal = create_proxy(_reveal)
 document.getElementById("button_reveal").addEventListener("click", reveal)
 
+
 def status(s):
     document.getElementById("status").innerHTML = s
 
+
 def message(s):
     document.getElementById("message").innerHTML = s
+
 
 def _hide(event):
     """ conceal text - data in the pic """
@@ -113,7 +113,7 @@ def _hide(event):
         #
         s = Stegano()
         s.bs2image(pic)
-        s.data = bytearray(txt,'utf-8')
+        s.data = bytearray(txt, 'utf-8')
         #
         # encode
         #
@@ -121,7 +121,7 @@ def _hide(event):
         #
         #
         # Create a JS File object with our data and the proper mime type
-        #image_file = File.new([Uint8Array.new(s.image)], "new_image_file.png", {type: "image/png"})
+        # image_file = File.new([Uint8Array.new(s.image)], "new_image_file.png", {type: "image/png"})
         image_file = File.new([Uint8Array.new(s.image2bs(".png"))], "new_image_file.png", {type: "image/png"})
         #
         # Add new modified image, so that it can be visually compared and then saved
@@ -140,6 +140,7 @@ def _hide(event):
 hide = create_proxy(_hide)
 document.getElementById("button_hide").addEventListener("click", hide)
 
+
 def _clear_pic(event):
     global pic
     document.getElementById("show_pic").innerHTML = ""
@@ -148,8 +149,10 @@ def _clear_pic(event):
     message("")
     status("")
 
+
 clear_pic = create_proxy(_clear_pic)
 document.getElementById("button_clear_pic").addEventListener("click", clear_pic)
+
 
 def _clear_txt(event):
     global txt
@@ -158,6 +161,7 @@ def _clear_txt(event):
     document.getElementById("text-upload").value = ""
     message("")
     status("")
+
 
 clear_txt = create_proxy(_clear_txt)
 document.getElementById("button_clear_txt").addEventListener("click", clear_txt)
