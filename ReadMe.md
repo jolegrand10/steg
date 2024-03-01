@@ -33,9 +33,41 @@ It uses the least significant bit of every channel and every pixel in an image t
 
 It requires 
 
-`pip install opencv-python` 
+`$ pip install opencv-python` 
 
 (preferably in a virtual environment) for reading/writing image files 
 and can be executed with 
 
 `$ python stegano.py`
+
+where the `$` represents the command line prompt.
+
+## Executables @ Windows
+
+To build executables (`tksteg` and `csteg`) for Windows `cx_Freeze` is required:
+
+`$ pip install cx-Freeze` 
+
+And then
+
+`$ python setup.py build `
+
+To build installation file (msi file) for Windows 
+
+`$ python setup.py bdist_msi`
+
+
+## Executables @ Linux
+
+To build an exe for Linux, first:
+
+`$ pip install pyinstaller`
+
+and then, either use the spec file:
+
+`$ pyinstaller tksteg.spec`\
+`$ pyinstaller csteg.spec`
+
+or execute the following 1-line command (shown here for `tksteg` only):
+
+`$ pyinstaller main.py --hiddenimport PIL --hiddenimport PIL._imagingtk --hiddenimport PIL._tkinter_finder --name tksteg --onefile`
