@@ -1,0 +1,6 @@
+name = "Wsteg"
+
+packages = ["numpy", "opencv-python" ]
+
+[files]
+"./stegano.py" = ""
