@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.2.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.2.1/core.js"></script>
+    <title>Wsteg</title>
+    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <script defered type="py" src="./wsteg.py" config="wsteg.toml"></script>
+
+</head>
+
+<body>
+<p> Steganography hides a text in a picture. <br>
+    Wsteg is a simple and free tool to hide/reveal a text in/from a picture.
+</p>
+<ul>
+	<li>To hide a text in a picture, upload your picture, upload -or type in- your text and finally, choose "Hide"</li>
+	<li>To reveal the hidden text from a picture, upload your picture,then choose "Reveal"</li>
+</ul>
+
+
+
+    <py-script>
+        from datetime import datetime
+        now = datetime.now()
+        now.strftime("%m/%d/%Y, %H:%M:%S")
+    </py-script>
+</p>
+
+<table>
+    <tr>
+        <th>
+            Picture file: <label for="Upload a picture"></label><input type="file" id="pic-upload">
+        </th>
+        <th>
+            Text file: <label for="Upload a text"></label><input type="file" id="text-upload">
+            <div id="show_text"></div>
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <div id="show_pic"></div>
+        </td>
+        <td>
+            <div style="border:2px inset #AAA;cursor:text;height:120px;overflow:auto;width:600px; resize:both; white-space: pre-wrap;">
+                <div id="content" contentEditable="true">
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button type="button" id="button_reveal">Reveal</button>
+            <button type="button" id="button_clear_pic">Clear</button>
+        </td>
+        <td>
+            <button type="button" id="button_hide">Hide</button>
+            <button type="button" id="button_clear_txt">Clear</button>
+        </td>
+    </tr>
+    <tr>
+        <td> <div id="status"> Loading...</div></td>
+        <td> <div id="message">Please, wait !</div></td>
+    </tr>
+</table>
+
+</body>
+</html>

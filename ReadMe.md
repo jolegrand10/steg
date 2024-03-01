@@ -6,7 +6,7 @@ A simple steganography application, written in Python delivered in various forms
 
 - `tksteg` has a Graphical User Interface based on TkInter. It is delivered in the form of executables targeted at different OS environments (Windows, Linux, Darwin).
 
-- `csteg` has a Command Language Interface. It is delivered in executables.
+- `csteg` has a Command Line Interface. It is delivered as executables.
 
 - `wsteg` is a web application, using `PyScript` as the script language embedded in a web page.
 
