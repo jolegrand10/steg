@@ -165,6 +165,6 @@ def _clear_txt(event):
 
 clear_txt = create_proxy(_clear_txt)
 document.getElementById("button_clear_txt").addEventListener("click", clear_txt)
-
+document.getElementById('splash-screen').style.display = 'none';
 status("Ready!")
 message("")
