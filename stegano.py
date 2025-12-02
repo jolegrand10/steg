@@ -108,13 +108,16 @@ class Stegano:
                 if b:
                     #
                     # to set last bit while preserving the others : or with 1
+                    # uint8(1) to make sure the 1 byte ints are used.
                     #
-                    self.image[i, j, k] |= 1
+                    self.image[i, j, k] |= np.uint8(1)
                 else:
                     #
                     # to clear last bit while preserving the others : and with ~1
+                    # ~1 meand -2 and some versions of numpy cause an out of bounds error for
+                    # an uint8. To avoid that the and is made with FE instead
                     #
-                    self.image[i, j, k] &= ~1
+                    self.image[i, j, k] &= 0xFE
                 #
                 # move  next channel
                 #

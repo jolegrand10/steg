@@ -31,16 +31,15 @@ The Stegano class provides essentially 2 methods : `encode` and `decode`.
 
 It uses the least significant bit of every channel and every pixel in an image to encode 1 bit of the information to be concealed.
 
-It requires 
+The opencv library is required for reading/writing image files. Its installation takes place preferably in a virtual environment. 
 
-`$ pip install opencv-python` 
+`(venv) $ pip install opencv-python` 
 
-(preferably in a virtual environment) for reading/writing image files 
-and can be executed with 
+A simple script is provided with the Stegano class and can be executed with:
 
-`$ python stegano.py`
+`(venv) $ python stegano.py`
 
-where the `$` represents the command line prompt.
+The `$` represents the command line prompt and the `(venv)` that appears with it indicates that the virtual environment is activated.
 
 ## Executables @ Windows
 
@@ -71,3 +70,19 @@ and then, either use the spec file:
 or execute the following 1-line command (shown here for `tksteg` only):
 
 `$ pyinstaller main.py --hiddenimport PIL --hiddenimport PIL._imagingtk --hiddenimport PIL._tkinter_finder --name tksteg --onefile`
+
+## Executables @ Darwin
+
+Missing at the moment. Any help is welcome !
+
+## Testing
+Tests use the unittest library. They are located in the tests sub-folder together with the necessary test data. Ensure that `venv` is activated before running any test.
+
+To run all available tests: 
+
+```(venv) $ python -m unittest```
+
+
+To run individual tests:
+
+```(venv) $ python -m unittest tests.test_stegano```
