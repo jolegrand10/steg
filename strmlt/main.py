@@ -71,7 +71,8 @@ if action == "Reveal":
         st.session_state.text = st.session_state.steg.data.decode('utf-8')
     except UnicodeDecodeError:
         st.text_area("Decode error:",
-                        "No text in this picture", height=200)
+                     "No text in this picture",
+                     height=200)
         st.stop()
     except Exception as e:
         st.text_area("Decode error:", str(e), height=200)
