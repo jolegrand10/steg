@@ -10,6 +10,12 @@ A simple steganography application, written in Python delivered in various forms
 
 - `wsteg` is a web application, using `PyScript` as the script language embedded in a web page.
 
+- `strmlt/main.py` is a Streamlit script. It uses the Stegano class from stegano.py and is deployed at
+  steganog.streamlit.app
+  
+- `api` is based on a Flask REST API. This is WIP at the time of writing.
+
+- `docker` embeds the API in Docker containers. This remains TODO at the time of writing.
 
 # Steganography
 

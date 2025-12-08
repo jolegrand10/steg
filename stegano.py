@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import logging
 import sys
+from io import BytesIO
 
 
 class Stegano:
@@ -73,7 +74,14 @@ class Stegano:
 
     def output_image(self, dot_ext):
         """ send image to stdout """
+        # TODO check imencode return code
         sys.stdout.buffer.write(cv.imencode(dot_ext, self.image)[1].tostring())
+
+    def image_buffer(self, dot_ext):
+        success, buffer = cv.imencode(dot_ext, self.image)
+        if success:
+            return BytesIO(buffer.tobytes())
+        raise RuntimeError(f"Cannot output image to buffer")
 
     def encode(self):
         """ message is a byte array """
