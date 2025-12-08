@@ -1,5 +1,5 @@
 # Flask API
-The present API is requires the installation of Flask with:
+The present API requires the installation of Flask with:
 
 `pip install flask`
 
