@@ -22,7 +22,7 @@ if "encoded_image" not in st.session_state:
     st.session_state.encoded_image = None
 if "steg" not in st.session_state:
     st.session_state.steg = stegano.Stegano()
-
+"""
 logging.getLogger("PIL").setLevel(logging.WARNING)
 logging.getLogger("watchdog").setLevel(logging.WARNING)
 logger = logging.getLogger("wsteg")
@@ -35,6 +35,7 @@ if "wsteg_handlers_attached" not in st.session_state:
     logger.addHandler(stream_handler)
     st.session_state.wsteg_handlers_attached = True
 stegano.logger = logger
+"""
 
 st.title("Steganography")
 st.write(INTRO)
