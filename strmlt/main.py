@@ -28,11 +28,12 @@ logging.getLogger("watchdog").setLevel(logging.WARNING)
 logger = logging.getLogger("wsteg")
 logger.setLevel(logging.INFO)
 logger.propagate = False
-if not logger.hasHandlers():
+if "wsteg_handlers_attached" not in st.session_state:
     formatter = logging.Formatter('%(asctime)s *%(levelname)s* %(message)s', "%Y-%m-%d %H:%M:%S")
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
+    st.session_state.wsteg_handlers_attached = True
 
 st.title("Steganography")
 st.write(INTRO)
