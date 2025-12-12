@@ -1,12 +1,12 @@
+import logging
 import os
 import sys
-import logging
+
 import streamlit as st
 from PIL import Image
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from stegano import Stegano
-
 
 INTRO = """Hide a text in a picture or reveal the text hidden in a picture with steganography."""
 
@@ -25,7 +25,7 @@ if "steg" not in st.session_state:
 
 logging.getLogger("PIL").setLevel(logging.WARNING)
 logging.getLogger("watchdog").setLevel(logging.WARNING)
-logger = logging.getLogger(__name__)  # once in each module
+logger = logging.getLogger()
 
 st.title("Steganography")
 st.write(INTRO)
