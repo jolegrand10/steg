@@ -14,14 +14,18 @@ import logging
 # ------------------------------
 root_logger = logging.getLogger()  # le root logger
 root_logger.setLevel(logging.INFO)
-
-# Vérifier si un handler a déjà été attaché pour éviter doublons
+#
+# As this script will loaded and reloaded
+# we need to avoid duplicate handlers
+# the limit and the difficulty is to
+# preserve stegano.py as it is, unchanged
+#
 if "root_handlers_attached" not in st.session_state:
-    # Supprimer les handlers existants du root logger
+    # suppress existing handlers from the root logger
     for h in root_logger.handlers[:]:
         root_logger.removeHandler(h)
 
-    # Créer un handler unique
+    # create a unique handler
     formatter = logging.Formatter('%(asctime)s *%(levelname)s* %(name)s %(message)s',
                                   "%Y-%m-%d %H:%M:%S")
     stream_handler = logging.StreamHandler()
@@ -31,7 +35,7 @@ if "root_handlers_attached" not in st.session_state:
     st.session_state.root_handlers_attached = True
 
 # ------------------------------
-# Logger dédié pour ton code
+# Setup a dedicated handler
 # ------------------------------
 logger = logging.getLogger("wsteg")
 logger.setLevel(logging.INFO)
