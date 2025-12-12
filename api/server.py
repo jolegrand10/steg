@@ -7,16 +7,17 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from stegano import Stegano
 from util.fullog import Full_Log
 
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
 @app.route('/steg/encode', methods=['POST'])
 def encode():
-    logging.debug("Encoding")
+    logger.info("Encoding")
     image_file = request.files.get('image')
-    logging.debug(f"{image_file}")
+    logger.debug(f"{image_file}")
     text_file = request.files.get('text')
-    logging.debug(f"{text_file}")
+    logger.debug(f"{text_file}")
 
     steg = Stegano()
 
@@ -33,9 +34,9 @@ def encode():
 
 @app.route('/steg/decode', methods=['POST'])
 def decode():
-    logging.debug("Decoding")
+    logger.info("Decoding")
     image_file = request.files.get('image')
-    logging.debug(f"{image_file}")
+    logger.debug(f"{image_file}")
  
     steg = Stegano()
 

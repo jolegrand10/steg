@@ -1,6 +1,9 @@
-from js import document, console, window, FileReader, File, Uint8Array, Element
+from js import Element, File, FileReader, Uint8Array, console, document, window
 from pyodide.ffi import create_proxy
+
 from stegano import Stegano
+
+
 
 # These are globals
 pic = bytearray()

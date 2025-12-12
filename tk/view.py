@@ -7,8 +7,12 @@ from PIL.ImageTk import PhotoImage
 import logging
 import time
 import threading
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from stegano import Stegano
 
+logger = logging.getLogger(__name__)
 
 class Worker:
     def __init__(self, model, win, msg):
@@ -62,7 +66,7 @@ class EncodingWorker(Worker):
         n = self.model.encode()
         if n < len(self.model.data):
             message = "Text too long for this image. Truncated."
-            logging.warning(message)
+            logger.warning(message)
             tk.messagebox.showinfo("Warning", message)
         self.finish()
 
@@ -86,7 +90,7 @@ class ReadImageWorker(Worker):
         try:
             self.model.read_image(self.view.picpath)
         except Exception as e:
-            logging.error(f"Cannot read cv2 image. Reason: {e}")
+            logger.error(f"Cannot read cv2 image. Reason: {e}")
         if self.model is not None and self.model.image is not None:
             #
             # read it for the view - requires a TkImage
@@ -99,10 +103,10 @@ class ReadImageWorker(Worker):
             title = "Open failed"
             message = f"Cannot load image {self.view.picpath}"
             info = "Avoid non ASCII chars in file path because they make CV2 sick !"
-            logging.error(message)
+            logger.error(message)
             if not self.view.picpath.isascii():
                 message += '\n' + info
-                logging.error(info)
+                logger.error(info)
             tk.messagebox.showinfo(title, message)
 
         self.finish()
@@ -220,7 +224,7 @@ class View:
             title = "Open failed"
             message = "No image was specified"
             tk.messagebox.showinfo(title, message)
-            logging.warning(f"{title}. {message}")
+            logger.warning(f"{title}. {message}")
 
     def cmd_opentxt(self):
         title = "Open an text file"
@@ -233,7 +237,7 @@ class View:
             title = "Open failed"
             message = "No text file was specified"
             tk.messagebox.showinfo(title, message)
-            logging.warning(f"{title}. {message}")
+            logger.warning(f"{title}. {message}")
 
     def cmd_save(self, event=None):
         if self.showpic:
@@ -244,7 +248,7 @@ class View:
     def cmd_savepic(self):
         do_it = True
         if self.picpath[-3:].lower() == 'jpg':
-            logging.warning("Cannot save to jpg. Proposing png instead.")
+            logger.warning("Cannot save to jpg. Proposing png instead.")
             #
             # replace JPG by PNG in output image
             #
@@ -315,7 +319,7 @@ class View:
             title = "Encoding failed"
             message = "Cannot find any text to encode"
             tk.messagebox.showinfo(title, message)
-            logging.warning(f"{title}. {message}")
+            logger.warning(f"{title}. {message}")
 
     def cmd_decode(self, event=None):
         w = DecodingWorker(self.model, self.root)
@@ -331,24 +335,26 @@ class View:
             title = "Decoding failed"
             message = "Cannot find any text message in the present picture"
             tk.messagebox.showinfo(title, message)
-            logging.warning(f"{title}. {message}")
+            logger.warning(f"{title}. {message}")
 
     def refresh_steg_menu(self):
         self.steg_menu.entryconfig("Encode", state="active" if
-        self.model is not None and
-        self.model.image is not None
-        else "disabled")
+                                   self.model is not None and
+                                   self.model.image is not None
+                                   else "disabled")
         self.steg_menu.entryconfig("Decode", state="active" if
-        self.model is not None and
-        self.model.image is not None
-        else "disabled")
-        logging.debug("Refreshing steg menu now !")
+                                   self.model is not None and
+                                   self.model.image is not None
+                                   else "disabled")
+        logger.debug("Refreshing steg menu now !")
 
     def run(self):
         self.root.mainloop()
 
 
 def main():
+    from util.fullog import Full_Log
+    Full_Log(name="View")
     v = View(controller=None, model=Stegano())
     v.root.mainloop()
 

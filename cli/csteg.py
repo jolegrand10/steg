@@ -1,13 +1,16 @@
 import argparse
 import os.path
-from util.fullog import Full_Log
 import logging
+import os
 import sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from stegano import Stegano
-import traceback
+from util.fullog import Full_Log
 
-DEBUG = True
 
+DEBUG = False
+
+logger = logging.getLogger(__name__)
 
 class Csteg:
     """ a command to run Steganography from the CLI"""
@@ -75,13 +78,13 @@ class Csteg:
             #
             for k in dir(pa):
                 if not k.startswith('_'):
-                    logging.debug(f"  {k}: {eval('pa.' + k)}")
+                    logger.debug(f"  {k}: {eval('pa.' + k)}")
 
     def run(self):
         try:
             self.stegano.read_image(self.picfile)
         except Exception as e:
-            logging.error(f"Cannot read image at {self.infile}. Reason: {e}")
+            logger.error(f"Cannot read image at {self.infile}. Reason: {e}")
         else:
             if self.action == 'encode':
                 self.encode()
@@ -90,12 +93,12 @@ class Csteg:
 
     def encode(self):
         try:
-            logging.debug("Collecting input")
+            logger.debug("Collecting input")
             if self.infile == sys.stdin:
                 self.stegano.input_data()
             else:
                 self.stegano.read_data(self.infile)
-            logging.debug("Attempting encode")
+            logger.debug("Attempting encode")
             self.stegano.encode()
             input_filetype = self.picfile[-4:].lower()
             if self.outfile == sys.stdout:
@@ -104,49 +107,49 @@ class Csteg:
                 output_filetype = self.outfile[-4:].lower()
 
             if output_filetype == ".jpg":
-                logging.warning("Cannot save to jpg. Will save to png instead.")
+                logger.warning("Cannot save to jpg. Will save to png instead.")
                 #
                 # replace JPG by PNG in output image
                 #
                 output_filetype = '.png'
                 if self.outfile != sys.stdout:
                     self.outfile = self.outfile[:-4] + ".png"
-            logging.debug("Encoded image ready")
+            logger.debug("Encoded image ready")
             if self.outfile == sys.stdout:
-                logging.debug("Writing image to stdout")
+                logger.debug("Writing image to stdout")
                 self.stegano.output_image(output_filetype)
             else:
-                logging.info(f"Write image to {self.outfile}")
+                logger.info(f"Write image to {self.outfile}")
                 self.stegano.write_image(self.outfile)
         except Exception as e:
-            logging.error(f"Unexpected error while encoding: {e}", exc_info=self.debug)
+            logger.error(f"Unexpected error while encoding: {e}", exc_info=self.debug)
 
     def decode(self):
         try:
             if self.infile and self.infile != sys.stdin:
-                logging.warning(f"Infile parameter {self.infile} ignored. Not required for decoding")
-            logging.debug("Attempting decode")
+                logger.warning(f"Infile parameter {self.infile} ignored. Not required for decoding")
+            logger.debug("Attempting decode")
             self.stegano.decode()
-            logging.debug("Image analysed")
+            logger.debug("Image analysed")
             t = self.stegano.data.decode('utf-8')
-            logging.debug("Text found utf-8")
+            logger.debug("Text found utf-8")
             if self.outfile == sys.stdout:
                 sys.stdout.write(t)
             else:
-                logging.info(f"Write text to {self.outfile}")
+                logger.info(f"Write text to {self.outfile}")
                 self.stegano.write_data(self.outfile)
         except UnicodeError:
-            logging.error("Cannot find any text in this image")
+            logger.error("Cannot find any text in this image")
         except OSError as e:
-            logging.error(f"Failed to open {self.outfile} for write. Reason: {e}")
+            logger.error(f"Failed to open {self.outfile} for write. Reason: {e}")
         except Exception as e:
-            logging.error(f"Unexpected error while decoding: {e}", exc_info=self.debug)
+            logger.error(f"Unexpected error while decoding: {e}", exc_info=self.debug)
 
 
 def main():
     c = Csteg(argparse.ArgumentParser())
     c.parse()
-    Full_Log("csteg", debug=DEBUG, verbose=c.verbose)
+    Full_Log("csteg")
     c.run()
 
 

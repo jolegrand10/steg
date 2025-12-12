@@ -1,8 +1,11 @@
-import cv2 as cv
-import numpy as np
 import logging
 import sys
 from io import BytesIO
+
+import cv2 as cv
+import numpy as np
+
+logger = logging.getLogger(__name__)
 
 
 class Stegano:
@@ -21,7 +24,7 @@ class Stegano:
 
     def bs2image(self, bs):
         """ Byte string to image """
-        logging.info(f"Read image from bytestring")
+        logger.info(f"Read image from bytestring")
         nparr = np.frombuffer(bs, np.uint8)
         self.image = cv.imdecode(nparr, cv.IMREAD_COLOR)
         self.n, self.p, _ = self.image.shape
@@ -33,44 +36,44 @@ class Stegano:
         return nparr.tobytes()
 
     def read_image(self, path):
-        logging.info(f"Read image from {path}")
+        logger.info(f"Read image from {path}")
         try:
             self.image = cv.imread(path)
         except Exception as e:
-            logging.error(f"Failed to read cv2 image. Reason: {e}")
+            logger.error(f"Failed to read cv2 image. Reason: {e}")
         if self.image is None:
             raise Exception("Failed to read cv2 image")
         else:
-            logging.debug(f"Successfully read image from {path}")
+            logger.debug(f"Successfully read image from {path}")
             self.n, self.p, _ = self.image.shape
 
     def read_data(self, path):
         """ reads a text file as bytes """
         with open(path, "rb") as f:
             self.data = f.read()
-        logging.info(f"{len(self.data)} bytes read from {path}")
+        logger.info(f"{len(self.data)} bytes read from {path}")
 
     def input_data(self):
         """ collect text data as bytes from stdin """
         self.data = sys.stdin.read()
         self.data = bytearray(self.data, 'utf-8')
-        logging.info(f"{len(self.data)} bytes read from stdin")
+        logger.info(f"{len(self.data)} bytes read from stdin")
 
     def write_image(self, path):
         """ save image to file """
-        logging.info(f"Write image to {path}")
+        logger.info(f"Write image to {path}")
         cv.imwrite(path, self.image)
 
     def write_data(self, path):
         """ save text to file """
         with open(path, "wb") as f:
             f.write(self.data)
-            logging.info(f"{len(self.data)} bytes written")
+            logger.info(f"{len(self.data)} bytes written")
 
     def output_data(self):
         """ send text to stdout """
         sys.stdout.write(self.data)
-        logging.info(f"{len(self.data)} bytes written")
+        logger.info(f"{len(self.data)} bytes written")
 
     def output_image(self, dot_ext):
         """ send image to stdout """
@@ -181,7 +184,7 @@ class Stegano:
                             # null byte terminates the message
                             #
                             self.data = message
-                            logging.info(f"{len(self.data)} bytes decoded")
+                            logger.info(f"{len(self.data)} bytes decoded")
                             return
                         else:
                             #
@@ -205,20 +208,26 @@ def test_bs():
 
 def main():
     """ a short test"""
+    logger.info("Starting interactive test session")
     s = Stegano()
     s.read_image(input("Enter path to image file: "))
     while (op := input("D to decode, E to encode, Q to quit: ")) not in "DEQ":
-        continue
+        pass
     if op == "Q":
+        logger.info("Ending interactive test session")
         return
     if op == 'D':
+        logger.info("Decoding")
         s.decode()
         print(s.data)
     if op == "E":
+        logger.info("Encoding")
         s.read_data(input("Enter path to text file: "))
         s.encode()
         s.write_image(input("Enter path to output image file: "))
 
 
 if __name__ == '__main__':
+    from util.fullog import Full_Log
+    Full_Log(name="Stegano")
     main()
