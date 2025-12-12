@@ -7,6 +7,42 @@ from PIL import Image
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import stegano
 
+import logging
+
+# ------------------------------
+# Logger root : Streamlit-safe
+# ------------------------------
+root_logger = logging.getLogger()  # le root logger
+root_logger.setLevel(logging.INFO)
+
+# Vérifier si un handler a déjà été attaché pour éviter doublons
+if "root_handlers_attached" not in st.session_state:
+    # Supprimer les handlers existants du root logger
+    for h in root_logger.handlers[:]:
+        root_logger.removeHandler(h)
+
+    # Créer un handler unique
+    formatter = logging.Formatter('%(asctime)s *%(levelname)s* %(name)s %(message)s',
+                                  "%Y-%m-%d %H:%M:%S")
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    root_logger.addHandler(stream_handler)
+
+    st.session_state.root_handlers_attached = True
+
+# ------------------------------
+# Logger dédié pour ton code
+# ------------------------------
+logger = logging.getLogger("wsteg")
+logger.setLevel(logging.INFO)
+logger.propagate = False
+
+if "wsteg_handlers_attached" not in st.session_state:
+    stream_handler_wsteg = logging.StreamHandler()
+    stream_handler_wsteg.setFormatter(formatter)
+    logger.addHandler(stream_handler_wsteg)
+    st.session_state.wsteg_handlers_attached = True
+
 INTRO = """Hide a text in a picture or reveal the text hidden in a picture with steganography."""
 
 st.set_page_config(page_title="Steg", layout="wide")
