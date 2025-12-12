@@ -6,7 +6,7 @@ import streamlit as st
 from PIL import Image
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from stegano import Stegano
+import stegano
 
 INTRO = """Hide a text in a picture or reveal the text hidden in a picture with steganography."""
 
@@ -21,7 +21,7 @@ if "text" not in st.session_state:
 if "encoded_image" not in st.session_state:
     st.session_state.encoded_image = None
 if "steg" not in st.session_state:
-    st.session_state.steg = Stegano()
+    st.session_state.steg = stegano.Stegano()
 
 logging.getLogger("PIL").setLevel(logging.WARNING)
 logging.getLogger("watchdog").setLevel(logging.WARNING)
