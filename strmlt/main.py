@@ -34,6 +34,7 @@ if "wsteg_handlers_attached" not in st.session_state:
     stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
     st.session_state.wsteg_handlers_attached = True
+stegano.logger = logger
 
 st.title("Steganography")
 st.write(INTRO)
