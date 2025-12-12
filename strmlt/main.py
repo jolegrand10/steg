@@ -25,7 +25,14 @@ if "steg" not in st.session_state:
 
 logging.getLogger("PIL").setLevel(logging.WARNING)
 logging.getLogger("watchdog").setLevel(logging.WARNING)
-logger = logging.getLogger()
+logger = logging.getLogger("wsteg")
+logger.setLevel(logging.INFO)
+logger.propagate = False
+if not logger.hasHandlers():
+    formatter = logging.Formatter('%(asctime)s *%(levelname)s* %(message)s', "%Y-%m-%d %H:%M:%S")
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
 
 st.title("Steganography")
 st.write(INTRO)
